@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "243032234811",
+    "project_id": "acappella-station",
+    "storage_bucket": "acappella-station.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:243032234811:android:e43f0c7ec9c309d98e351e",
+        "android_client_info": {
+          "package_name": "com.yuki.kawashima.acappella_station"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "243032234811-o13g9j28jtsngm92cg2jvtv9pd4t67h6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSfP5_wgqO1hcL8cvzzFE7M7nUO4ywDpo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "243032234811-o13g9j28jtsngm92cg2jvtv9pd4t67h6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
