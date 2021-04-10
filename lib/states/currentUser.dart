@@ -1,25 +1,28 @@
+import 'package:acappella_station/models/user.dart';
+import 'package:acappella_station/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
 class CurrentUser extends ChangeNotifier {
-  String _uid;
-  String _email;
+  OurUser _currentUser = OurUser();
 
-  String get getUid => _uid;
-  String get getEmail => _email;
-
+  OurUser get getCurrentUser => _currentUser;
 
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<String> onStartUp() async {
     String retVal = 'error';
 
-    try{
+    try {
       User _firebaseUser = _auth.currentUser;
-      _uid = _firebaseUser.uid;
-      _email = _firebaseUser.email;
-      retVal = 'success';
-    }catch(e){
+      if (_firebaseUser != null) {
+        _currentUser = await OurDatabase().getUserInfo(_firebaseUser.uid);
+        if (_currentUser != null) {
+          retVal = 'success';
+        }
+      }
+    } catch (e) {
       print(e);
     }
     return retVal;
@@ -28,26 +31,32 @@ class CurrentUser extends ChangeNotifier {
   Future<String> signOut() async {
     String retVal = 'error';
 
-    try{
-      _auth.signOut();
-      _uid = null;
-      _email = null;
+    try {
+      await _auth.signOut();
+      _currentUser = OurUser();
       retVal = 'success';
-    }catch(e){
+    } catch (e) {
       print(e);
     }
     return retVal;
   }
 
-
-  Future<String> signUpUser(String email, String password) async {
+  Future<String> signUpUser(
+      String email, String password, String fullName) async {
     String retVal = 'error';
+    OurUser _user = OurUser();
 
-    try{
-      await _auth.createUserWithEmailAndPassword(email: email, password: password);
-
-      retVal = 'success';
-    }catch(e){
+    try {
+      UserCredential _authResult = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      _user.uid = _authResult.user.uid;
+      _user.email = _authResult.user.email;
+      _user.fullName = fullName;
+      String _returnString = await OurDatabase().createUser(_user);
+      if (_returnString == 'success') {
+        retVal = 'success';
+      }
+    } catch (e) {
       retVal = e.message;
     }
 
@@ -57,14 +66,15 @@ class CurrentUser extends ChangeNotifier {
   Future<String> loginUserWithEmail(String email, String password) async {
     String retVal = 'error';
 
-    try{
-      UserCredential _authResult = await _auth.signInWithEmailAndPassword(email: email, password: password);
+    try {
+      UserCredential _authResult = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
 
-        _uid = _authResult.user.uid;
-        _email = _authResult.user.email;
+      _currentUser = await OurDatabase().getUserInfo(_authResult.user.uid);
+      if (_currentUser != null) {
         retVal = 'success';
-
-    }catch(e){
+      }
+    } on PlatformException catch (e) {
       retVal = e.message;
     }
 

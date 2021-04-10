@@ -24,6 +24,7 @@ dependencies:
 
   firebase_auth: ^1.0.3
   firebase_core: ^1.0.3
+  cloud_firestore: ^1.0.4
   provider:
 
   flutter:
