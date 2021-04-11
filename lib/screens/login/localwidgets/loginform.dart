@@ -1,4 +1,5 @@
 import 'package:acappella_station/screens/home/home.dart';
+import 'package:acappella_station/screens/root/root.dart';
 import 'package:acappella_station/screens/signup/signup.dart';
 import 'package:acappella_station/states/currentUser.dart';
 import 'package:acappella_station/widgets/ourContainer.dart';
@@ -25,7 +26,7 @@ class _OurLoginFormState extends State<OurLoginForm> {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (context) => HomeScreen(),
+            builder: (context) => OurRoot(),
           ),
             (route)=>false,
         );
