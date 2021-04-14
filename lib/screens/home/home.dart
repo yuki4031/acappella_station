@@ -1,11 +1,28 @@
 import 'package:acappella_station/screens/nogroup/noGroup.dart';
 import 'package:acappella_station/screens/root/root.dart';
+import 'package:acappella_station/states/currentGroup.dart';
 import 'package:acappella_station/states/currentUser.dart';
 import 'package:acappella_station/widgets/ourContainer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
+    CurrentGroup _currentGroup = Provider.of<CurrentGroup>(
+        context, listen: false);
+    _currentGroup.updateStateFromDatabase(_currentUser.getCurrentUser.groupId);
+  }
 
   void _signOut(BuildContext context) async {
     CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
@@ -36,51 +53,28 @@ class HomeScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: OurContainer(
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    'I song this song for you.',
-                    style: TextStyle(
-                      fontSize: 30.0,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20.0),
-                    child: Row(
+              child: Consumer<CurrentGroup>(
+                  builder: (BuildContext context, value, Widget child) {
+                    return Column(
                       children: <Widget>[
                         Text(
-                          'Due In : ',
+                          value.getCurrentSong.name ?? 'loading',
                           style: TextStyle(
-                            fontSize: 20.0,
+                            fontSize: 30.0,
                             color: Colors.grey[600],
                           ),
                         ),
-                        Text(
-                          '8 days',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.grey[600],
-                            fontWeight: FontWeight.bold,
+                        TextButton(
+                          onPressed: () {},
+                          child: Text(
+                            'Finished Song',
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      'Finished Book',
-                    ),
-                  ),
-                ],
+                    );
+                  }
+
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: OurContainer(
-              child: Text('2'),
             ),
           ),
           TextButton(

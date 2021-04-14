@@ -1,8 +1,21 @@
 import 'package:acappella_station/screens/creategroup/createGroup.dart';
 import 'package:acappella_station/screens/joingroup/joinGroup.dart';
+import 'package:acappella_station/screens/root/root.dart';
+import 'package:acappella_station/states/currentUser.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class OurNoGroup extends StatelessWidget {
+
+  void _signOut(BuildContext context) async {
+    CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
+    String _returnString = await _currentUser.signOut();
+    if (_returnString == 'success') {
+      Navigator.pushAndRemoveUntil(context,
+          MaterialPageRoute(builder: (context) => OurRoot()), (route) => false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     void _goToJoin(BuildContext context) {
@@ -87,6 +100,11 @@ class OurNoGroup extends StatelessWidget {
               ],
             ),
           ),
+          TextButton(
+            onPressed: () => _signOut(context),
+            child: Text('SIGN OUT'),
+          ),
+          SizedBox(height: 30.0,),
         ],
       ),
     );

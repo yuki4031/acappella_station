@@ -1,7 +1,12 @@
 import 'package:acappella_station/screens/home/home.dart';
+import 'package:acappella_station/screens/home/multi_playback.dart';
+import 'package:acappella_station/screens/home/playfrommic.dart';
+import 'package:acappella_station/screens/home/recordToStream.dart';
+import 'package:acappella_station/screens/home/recordToStream2.dart';
 import 'package:acappella_station/screens/login/login1.dart';
 import 'package:acappella_station/screens/nogroup/noGroup.dart';
 import 'package:acappella_station/screens/splashscreen/splashScreen.dart';
+import 'package:acappella_station/states/currentGroup.dart';
 import 'package:acappella_station/states/currentUser.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +43,7 @@ class _OurRootState extends State<OurRoot> {
           _authStatus = AuthStatus.notInGroup;
         });
       }
-    }else{
+    } else {
       setState(() {
         _authStatus = AuthStatus.notLoggedIn;
       });
@@ -62,7 +67,10 @@ class _OurRootState extends State<OurRoot> {
         break;
 
       case AuthStatus.inGroup:
-        retVal = HomeScreen();
+        retVal = ChangeNotifierProvider(
+          create: (context) => CurrentGroup(),
+          child: RecordToStream(),
+        );
         break;
       default:
     }
