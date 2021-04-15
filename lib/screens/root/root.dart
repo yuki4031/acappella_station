@@ -3,6 +3,7 @@ import 'package:acappella_station/screens/home/multi_playback.dart';
 import 'package:acappella_station/screens/home/playfrommic.dart';
 import 'package:acappella_station/screens/home/recordToStream.dart';
 import 'package:acappella_station/screens/home/recordToStream2.dart';
+import 'package:acappella_station/screens/homeplayer/homeview/homeview.dart';
 import 'package:acappella_station/screens/login/login1.dart';
 import 'package:acappella_station/screens/nogroup/noGroup.dart';
 import 'package:acappella_station/screens/splashscreen/splashScreen.dart';
@@ -69,7 +70,7 @@ class _OurRootState extends State<OurRoot> {
       case AuthStatus.inGroup:
         retVal = ChangeNotifierProvider(
           create: (context) => CurrentGroup(),
-          child: RecordToStream(),
+          child: HomeView(),
         );
         break;
       default:
