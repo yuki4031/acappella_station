@@ -1,12 +1,14 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:acappella_station/states/currentUser.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
 const int tSampleRate = 44000;
 
@@ -26,6 +28,12 @@ class _CloudRecordListViewState extends State<CloudRecordListView> {
   String filePath;
   FirebaseStorage storage = FirebaseStorage.instance;
   Reference ref = FirebaseStorage.instance.ref('upload-voice-firebase');
+
+  String getGroupId(BuildContext context){
+    CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
+    String groupId = _currentUser.getCurrentUser.groupId;
+    return groupId;
+  }
 
   _CloudRecordListViewState();
 

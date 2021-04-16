@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:acappella_station/states/currentGroup.dart';
+import 'package:acappella_station/states/currentUser.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,8 @@ class _FeatureButtonsViewState extends State<FeatureButtonsView> {
 
   String _filePath;
   StreamSubscription _mRecordingDataSubscription;
+
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   void initState() {
@@ -79,7 +82,7 @@ class _FeatureButtonsViewState extends State<FeatureButtonsView> {
                     ),
                     IconButton(
                       icon: Icon(Icons.upload_file),
-                      onPressed: _onFileUploadButtonPressed,
+                      onPressed: () => _onFileUploadButtonPressed(context),
                     ),
                   ],
                 )
@@ -92,23 +95,23 @@ class _FeatureButtonsViewState extends State<FeatureButtonsView> {
     );
   }
 
-  Future<void> _onFileUploadButtonPressed() async {
+  Future<void> _onFileUploadButtonPressed(BuildContext context) async {
     FirebaseStorage firebaseStorage = FirebaseStorage.instance;
-    CurrentGroup _currentGroup =
-        Provider.of<CurrentGroup>(context, listen: false);
-    String groupName = _currentGroup.getCurrentGroup.name;
+    CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
+    String groupId = _currentUser.getCurrentUser.groupId;
+    print(groupId);
+
     setState(() {
       _isUploading = true;
     });
     try {
       //TODO:childが機能していない
       await firebaseStorage
-          .ref('upload-voice-firebase')
+          .ref('upload-voice-firebase/$groupId')
           .child(
-          _filePath.substring(_filePath.lastIndexOf('/'), _filePath.length))
+              _filePath.substring(_filePath.lastIndexOf('/'), _filePath.length))
           .putFile(File(_filePath));
       widget.onUploadComplete();
-
     } catch (e) {
       print('Error occured while uploading to Firebase ${e.toString()}');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -197,7 +200,9 @@ class _FeatureButtonsViewState extends State<FeatureButtonsView> {
 
   Future<IOSink> createFile() async {
     var tempDir = await getTemporaryDirectory();
-    _filePath = '${tempDir.path}/flutter_sound_example' + DateTime.now().millisecondsSinceEpoch.toString() +'.pcm';
+    _filePath = '${tempDir.path}/flutter_sound_example' +
+        DateTime.now().millisecondsSinceEpoch.toString() +
+        '.pcm';
     var outputFile = File(_filePath);
     if (outputFile.existsSync()) {
       await outputFile.delete();
@@ -227,5 +232,4 @@ class _FeatureButtonsViewState extends State<FeatureButtonsView> {
     _mRecorder = null;
     super.dispose();
   }
-
 }
