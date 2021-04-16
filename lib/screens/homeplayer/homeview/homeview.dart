@@ -1,5 +1,6 @@
 import 'package:acappella_station/screens/homeplayer/recorder/cloud_record_list_view.dart';
 import 'package:acappella_station/screens/homeplayer/recorder/feature_buttons_view.dart';
+import 'package:acappella_station/screens/nogroup/noGroup.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
@@ -54,6 +55,10 @@ class _HomeViewState extends State<HomeView> {
                 onUploadComplete: _onUploadComplete,
               ),
             ),
+            TextButton(
+              onPressed: () => _goToNoGroup(context),
+              child: Text('Book Club History'),
+            ),
           ],
         ),
       ),
@@ -67,5 +72,11 @@ class _HomeViewState extends State<HomeView> {
     setState(() {
       references = listResult.items;
     });
+  }
+
+  void _goToNoGroup(BuildContext context) {
+    Navigator.push(
+      context, MaterialPageRoute(builder: (context) => OurNoGroup(),),
+    );
   }
 }
